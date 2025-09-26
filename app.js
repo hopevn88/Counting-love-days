@@ -43,6 +43,23 @@ const initializeMusic = () => {
     const randomSong = music[Math.floor(Math.random() * music.length)];
     audioElement.setAttribute("src", `music/${randomSong}.mp3`);
     
+    // Try to autoplay music
+    const playMusic = async () => {
+      try {
+        // Unmute and play
+        audioElement.muted = false;
+        await audioElement.play();
+        console.log('Music started automatically');
+      } catch (error) {
+        console.log('Autoplay blocked by browser, user interaction required');
+        // Show a play button or message to user
+        showPlayButton();
+      }
+    };
+    
+    // Try to play when audio is loaded
+    audioElement.addEventListener('canplaythrough', playMusic, { once: true });
+    
     // Handle audio loading errors gracefully
     audioElement.addEventListener('error', () => {
       console.log('Audio file not found, continuing without music');
@@ -50,6 +67,51 @@ const initializeMusic = () => {
   }
 };
 
+const showPlayButton = () => {
+  const musicContainer = document.getElementById('music');
+  if (musicContainer) {
+    const playButton = document.createElement('button');
+    playButton.innerHTML = '🎵 Phát nhạc';
+    playButton.style.cssText = `
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    `;
+    
+    playButton.addEventListener('click', async () => {
+      const audio = document.querySelector('audio');
+      if (audio) {
+        try {
+          audio.muted = false;
+          await audio.play();
+          playButton.remove();
+        } catch (error) {
+          console.log('Failed to play music:', error);
+        }
+      }
+    });
+    
+    playButton.addEventListener('mouseenter', () => {
+      playButton.style.background = 'rgba(255, 255, 255, 1)';
+      playButton.style.transform = 'scale(1.05)';
+    });
+    
+    playButton.addEventListener('mouseleave', () => {
+      playButton.style.background = 'rgba(255, 255, 255, 0.9)';
+      playButton.style.transform = 'scale(1)';
+    });
+    
+    musicContainer.appendChild(playButton);
+  }
+};
 const addLoadingAnimation = () => {
   const wrapper = document.getElementById('wrapper');
   if (wrapper) {
@@ -103,6 +165,28 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize music
   initializeMusic();
+  
+  // Try to enable autoplay on first user interaction
+  const enableAutoplayOnInteraction = async () => {
+    const audio = document.querySelector('audio');
+    if (audio && audio.paused) {
+      try {
+        audio.muted = false;
+        await audio.play();
+        // Remove event listeners after successful play
+        document.removeEventListener('click', enableAutoplayOnInteraction);
+        document.removeEventListener('keydown', enableAutoplayOnInteraction);
+        document.removeEventListener('touchstart', enableAutoplayOnInteraction);
+      } catch (error) {
+        console.log('Still cannot autoplay:', error);
+      }
+    }
+  };
+  
+  // Add event listeners for user interaction
+  document.addEventListener('click', enableAutoplayOnInteraction, { once: true });
+  document.addEventListener('keydown', enableAutoplayOnInteraction, { once: true });
+  document.addEventListener('touchstart', enableAutoplayOnInteraction, { once: true });
   
   // Add animations and effects
   addLoadingAnimation();
