@@ -1,44 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <link rel="stylesheet" href="style.css">
-      <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
-      <title>Together</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Love Days - Đếm ngày yêu nhau của chúng ta">
+    <meta name="keywords" content="love, anniversary, couple, romance, timer">
+    <meta name="author" content="Love Days">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Love Days - Together Forever">
+    <meta property="og:description" content="Celebrating our love story with a beautiful countdown">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="img/main.jpg">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <link rel="apple-touch-icon" href="img/favicon.png">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts for better typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <title>Love Days - Together Forever 💕</title>
+    
+    <style>
+        /* Critical CSS for faster loading */
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #wrapper {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+        }
+    </style>
 </head>
 <body>
-     <div id="wrapper">
-           <h1>LOVE DAYS</h1>
+    <!-- Loading indicator -->
+    <div id="loading" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 1.2rem; z-index: 9999;">
+        Loading... 💕
+    </div>
 
-           <div id="clock-box">
-                 <div id="clock">
-                       <date>0 DAYS</date>
-                       <time>00:00:00</time>
-                  </div>
-            </div>
+    <div id="wrapper">
+        <header>
+            <h1>LOVE DAYS</h1>
+        </header>
+
+        <main>
+            <section id="clock-box" aria-label="Love timer">
+                <div id="clock">
+                    <date aria-label="Days together">0 DAYS</date>
+                    <time aria-label="Time together">00:00:00</time>
+                </div>
+            </section>
             
-            <div id="info">
-                  <div class="one">
-                        <img src="img/main.jpg" class="avt">
-                        <p>DII</p>
-                  </div>
-                  <div id="heart">
-                        ❤<anni>...</anni>
-                  </div>
-                  <div class="two">
-                        <img src="img/main2.jpg" class="avt">
-                        <p>KEM</p>
-                  </div>
-            </div>
-            
-            <div id="music">
-                  <audio loop autoplay controls>Your browser does not support the audio element.</audio>
-            </div>
-            <footer>Thank you for your love 💕</footer>
-      </div> 
-      
-      <script src="app.js"></script>
+            <section id="info" aria-label="Couple information">
+                <div class="one">
+                    <img src="img/main.jpg" class="avt" alt="DII's photo" loading="lazy">
+                    <p>DII</p>
+                </div>
+                <div id="heart" role="button" tabindex="0" aria-label="Love heart, click for animation">
+                    <span>❤</span>
+                    <anni>...</anni>
+                </div>
+                <div class="two">
+                    <img src="img/main2.jpg" class="avt" alt="KEM's photo" loading="lazy">
+                    <p>KEM</p>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>Thank you for your love 💕</p>
+            <small>Press 'L' for love, 'M' for music</small>
+        </footer>
+    </div>
+    
+    <aside id="music" aria-label="Background music">
+        <audio loop autoplay controls preload="metadata" aria-label="Love song">
+            Your browser does not support the audio element.
+        </audio>
+    </aside>
+    
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    
+    <script>
+        // Hide loading indicator when page is ready
+        window.addEventListener('load', () => {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Service Worker for offline functionality (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
 </body>
 </html>
