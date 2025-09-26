@@ -2,9 +2,9 @@
   "name": "project",
   "version": "1.0.0",
   "description": "Một website đẹp để đếm ngày yêu nhau của cặp đôi với thiết kế hiện đại và nhiều hiệu ứng thú vị.",
-  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server . -p 3000 -c-1"
     "start": "http-server . -p 3000 -c-1"
   },
   "keywords": [],
