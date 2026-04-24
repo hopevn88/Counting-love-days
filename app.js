@@ -166,27 +166,42 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize music
   initializeMusic();
   
-  // Try to enable autoplay on first user interaction
-  const enableAutoplayOnInteraction = async () => {
+  // Enhanced user interaction handling
+  let hasInteracted = false;
+  const enableMusicOnInteraction = async () => {
+    if (hasInteracted) return;
+    hasInteracted = true;
+    
     const audio = document.querySelector('audio');
-    if (audio && audio.paused) {
+    if (audio) {
       try {
-        audio.muted = false;
-        await audio.play();
-        // Remove event listeners after successful play
-        document.removeEventListener('click', enableAutoplayOnInteraction);
-        document.removeEventListener('keydown', enableAutoplayOnInteraction);
-        document.removeEventListener('touchstart', enableAutoplayOnInteraction);
+        if (audio.paused) {
+          await audio.play();
+        }
+        if (audio.muted) {
+          // Wait a bit before unmuting to ensure playback started
+          setTimeout(() => {
+            audio.muted = false;
+            console.log('Music enabled through user interaction');
+          }, 500);
+        }
+        
+        // Remove control buttons if they exist
+        const controlBtn = document.querySelector('.music-control-btn');
+        if (controlBtn) {
+          controlBtn.remove();
+        }
       } catch (error) {
-        console.log('Still cannot autoplay:', error);
+        console.log('Failed to enable music on interaction:', error);
       }
     }
   };
   
-  // Add event listeners for user interaction
-  document.addEventListener('click', enableAutoplayOnInteraction, { once: true });
-  document.addEventListener('keydown', enableAutoplayOnInteraction, { once: true });
-  document.addEventListener('touchstart', enableAutoplayOnInteraction, { once: true });
+  // Multiple event listeners for better compatibility
+  const interactionEvents = ['click', 'keydown', 'touchstart', 'mousedown', 'pointerdown'];
+  interactionEvents.forEach(event => {
+    document.addEventListener(event, enableMusicOnInteraction, { once: true, passive: true });
+  });
   
   // Add animations and effects
   addLoadingAnimation();
