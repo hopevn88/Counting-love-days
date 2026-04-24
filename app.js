@@ -1,5 +1,5 @@
 const yourDate = new Date("2020-08-11T00:00:26");
-const music = ['canloi', 'viem', 'tinhanh'];
+const music = ['viem'];
 
 // Utility functions
 const formatNumber = (num) => num > 9 ? num : "0" + num;
